@@ -43,7 +43,9 @@ class LLM(object):
             vmfb_path=vmfb_path,
             external_weight_path=external_weight_path,
         )
-        self.model = self.runner.ctx.modules.llama_dpis
+        if 'llama_dpis' in self.runner.ctx.modules: self.model = self.runner.ctx.modules.llama_dpis
+        elif 'state_update' in self.runner.ctx.modules: self.model = self.runner.ctx.modules.state_update
+        elif 'streaming_state_update' in self.runner.ctx.modules: self.model = self.runner.ctx.modules.streaming_state_update
 
     def format_out(self, results):
         return results.to_host()[0][0]
@@ -73,6 +75,7 @@ if __name__ == "__main__":
     )
     tokens = llm.initial_tokens(input_ids)
     initial = True
+    print(args.prompt,end='')
     while True:
         tokens = llm.get_next_token(tokens, initial)
         initial = False

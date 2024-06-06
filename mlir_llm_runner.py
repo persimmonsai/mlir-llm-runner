@@ -10,25 +10,19 @@ parser = argparse.ArgumentParser()
 
 # TODO move common runner flags to generic flag file
 parser.add_argument(
-    "--vmfb_path",
+    "--module",
     type=str,
     default="output.vmfb",
     help="path to vmfb containing compiled module",
 )
 parser.add_argument(
-    "--external_weight_path",
+    "--parameters",
     type=str,
     default="reformatted_parameters.irpa",
     help="path to external weight parameters",
 )
 parser.add_argument(
-    "--gguf_path",
-    type=str,
-    default="",
-    help="path to gguf file used to generate parameters",
-)
-parser.add_argument(
-    "--hf_model_path",
+    "--tokenizer",
     type=str,
     default="openlm-research/open_llama_3b",
     help="path to the hf model. Needed for tokenizer right now",
@@ -81,6 +75,7 @@ class SharkLLM(object):
             s = time.time()
             turbine_results.append(self.format_out(results))
             while self.format_out(results) != 2:
+                print(results)
                 results = self.model["run_forward"](results)
                 # uncomment to see tokens as they are emitted
                 # print(f"turbine: {tokenizer.decode(self.format_out(results))}")
@@ -119,8 +114,8 @@ if __name__ == "__main__":
     turbine_output = run_llm(
         args.device,
         args.prompt,
-        args.vmfb_path,
-        args.external_weight_path,
-        args.hf_model_path,
+        args.module,
+        args.parameters,
+        args.tokenizer,
     )
     print(turbine_output)

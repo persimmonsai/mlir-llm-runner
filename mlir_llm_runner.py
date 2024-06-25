@@ -1,7 +1,7 @@
 import argparse
 from turbine_models.model_runner import vmfbRunner
 from iree import runtime as ireert
-from transformers import LlamaTokenizer
+from transformers import AutoTokenizer
 
 parser = argparse.ArgumentParser()
 
@@ -66,7 +66,7 @@ class LLM(object):
 if __name__ == "__main__":
     args = parser.parse_args()
 
-    tokenizer = LlamaTokenizer.from_pretrained(args.tokenizer)
+    tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
     input_ids = tokenizer(args.prompt, return_tensors="pt").input_ids
     llm = LLM(
         device=args.device,
